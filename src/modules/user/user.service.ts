@@ -16,29 +16,29 @@ export class UserService extends RequestService<User, UpdatePasswordDto> {
   // CreateUserDto,
   // UpdatePasswordDto
   protected notFoundErrorMessage = ErrorMessage.USER_NOT_EXIST;
-  protected additionalCreateArguments = {
-    version: 1,
-    createdAt: Date.now(),
-    updatedAt: Date.now(),
-  };
+  // protected additionalCreateArguments = {
+  //   version: 1,
+  //   createdAt: Date.now(),
+  //   updatedAt: Date.now(),
+  // };
 
   protected get items(): User[] {
     return dataBase.users;
   }
 
-  protected checkUpdatedData(data: UpdatePasswordDto, user: User): void {
-    if (user.password !== data.oldPassword) {
-      throw new ForbiddenException(ErrorMessage.WRONG_OLD_PASSWORD);
-    }
-  }
-
-  protected updateAdditionalData(data: UpdatePasswordDto, user: User): User {
-    user.password = data.newPassword;
-    user.version += 1;
-    user.updatedAt = Date.now();
-
-    return user;
-  }
+  // protected checkUpdatedData(data: UpdatePasswordDto, user: User): void {
+  //   if (user.password !== data.oldPassword) {
+  //     throw new ForbiddenException(ErrorMessage.WRONG_OLD_PASSWORD);
+  //   }
+  // }
+  //
+  // protected updateAdditionalData(data: UpdatePasswordDto, user: User): User {
+  //   user.password = data.newPassword;
+  //   user.version += 1;
+  //   user.updatedAt = Date.now();
+  //
+  //   return user;
+  // }
 
   //
   // findAll(): User[] {
@@ -56,17 +56,19 @@ export class UserService extends RequestService<User, UpdatePasswordDto> {
   // }
 
   create(createUserData: CreateUserDto): User {
-    const newUser: User = {
-      id: v4(),
+    const newUser: Partial<User> = {
+      // id: v4(),
       ...createUserData,
       version: 1,
       createdAt: Date.now(),
       updatedAt: Date.now(),
     };
 
-    dataBase.users.push(newUser);
+    return super.create(newUser);
 
-    return newUser;
+    // dataBase.users.push(newUser);
+    //
+    // return newUser;
   }
 
   update(id: string, updatePasswordData: UpdatePasswordDto): User {
@@ -75,6 +77,13 @@ export class UserService extends RequestService<User, UpdatePasswordDto> {
     if (user.password !== updatePasswordData.oldPassword) {
       throw new ForbiddenException(ErrorMessage.WRONG_OLD_PASSWORD);
     }
+    // const changes: Partial<User> = {
+    //   password: updatePasswordData.newPassword,
+    //   version: user.version + 1,
+    //   updatedAt: Date.now(),
+    // };
+    //
+    // return super.update(id, changes);
 
     user.password = updatePasswordData.newPassword;
     user.version += 1;

@@ -38,11 +38,11 @@ export abstract class RequestService<
 
   // create(data: Omit<T, 'id'>): T {
   // create(data: K): T {
-  create(data: T): T {
+  create(data: Partial<T>): T {
     // const newItem = <T>(
     //   (<unknown>{ ...data, ...this.additionalCreateArguments, id: v4() })
     // );
-    const newItem = { ...data, id: v4() };
+    const newItem = <T>{ ...data, id: v4() };
 
     this.items.push(newItem);
 
