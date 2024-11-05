@@ -64,17 +64,17 @@ export class UserController extends CommonController<
   // //       ),
   // //   }),
   // // )
-  create(@Body() createUser: CreateUserDto): User {
-    return this.userService.create(createUser);
+  create(@Body() data: CreateUserDto): User {
+    return this.userService.create(data);
   }
   //
   @Put(':id')
   update(
     @Param('id', IdValidatePipe)
     id: string,
-    @Body() updateUserDto: UpdatePasswordDto,
+    @Body() data: UpdatePasswordDto,
   ): User {
-    return this.userService.update(id, updateUserDto);
+    return this.userService.update(id, data);
   }
   //
   // @HttpCode(HttpStatus.NO_CONTENT)
