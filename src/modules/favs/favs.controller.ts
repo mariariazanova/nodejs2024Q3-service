@@ -20,28 +20,28 @@ export class FavsController {
   constructor(private readonly favsService: FavsService) {}
 
   @Get()
-  findAll(): FavoritesResponse {
-    return this.favsService.findAll();
+  async findAll(): Promise<FavoritesResponse> {
+    return await this.favsService.findAll();
   }
 
   @Post('/:source/:id')
-  create(
+  async create(
     @Param('source') source: string,
     @Param('id', IdValidatePipe) id: string,
-  ): ItemType {
+  ): Promise<ItemType> {
     if (itemNameList.includes(<Item>source)) {
-      return this.favsService.create(<ItemName>source, id);
+      return await this.favsService.create(<ItemName>source, id);
     }
   }
 
   @HttpCode(HttpStatus.NO_CONTENT)
   @Delete('/:source/:id')
-  remove(
+  async remove(
     @Param('source') source: string,
     @Param('id', IdValidatePipe) id: string,
-  ): void {
+  ): Promise<void> {
     if (itemNameList.includes(<Item>source)) {
-      return this.favsService.remove(<ItemName>source, id);
+      return await this.favsService.remove(<ItemName>source, id);
     }
   }
 }

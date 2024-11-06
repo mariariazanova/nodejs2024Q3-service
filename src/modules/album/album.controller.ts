@@ -12,16 +12,16 @@ export class AlbumController extends CommonController<Album> {
   }
 
   @Post()
-  create(@Body() data: CreateAlbumDto): Album {
-    return this.albumService.create(data);
+  async create(@Body() data: CreateAlbumDto): Promise<Album> {
+    return await this.albumService.create(data);
   }
 
   @Put(':id')
-  update(
+  async update(
     @Param('id', IdValidatePipe)
     id: string,
     @Body() data: CreateAlbumDto,
-  ): Album {
-    return this.albumService.update(id, data);
+  ): Promise<Album> {
+    return await this.albumService.update(id, data);
   }
 }

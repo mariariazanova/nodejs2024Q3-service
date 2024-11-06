@@ -15,23 +15,25 @@ export class UserService extends RequestService<User, UpdatePasswordDto> {
     return dataBase.users;
   }
 
-  create(createUserData: CreateUserDto): Omit<User, Property.PASSWORD> {
+  async create(
+    createUserData: CreateUserDto,
+  ): Promise<Omit<User, Property.PASSWORD>> {
     const newUser: Partial<User> = {
       ...createUserData,
       version: 1,
       createdAt: Date.now(),
       updatedAt: Date.now(),
     };
-    const createdUser = super.create(newUser);
+    const createdUser = await super.create(newUser);
 
     return this.hidePassword(createdUser);
   }
 
-  update(
+  async update(
     id: string,
     updatePasswordData: UpdatePasswordDto,
-  ): Omit<User, Property.PASSWORD> {
-    const user: User = this.findOne(id);
+  ): Promise<Omit<User, Property.PASSWORD>> {
+    const user: User = await this.findOne(id);
 
     if (user.password !== updatePasswordData.oldPassword) {
       throw new ForbiddenException(ErrorMessage.WRONG_OLD_PASSWORD);
@@ -41,10 +43,12 @@ export class UserService extends RequestService<User, UpdatePasswordDto> {
     user.version += 1;
     user.updatedAt = Date.now();
 
-    return this.hidePassword(user);
+    return await this.hidePassword(user);
   }
 
-  private hidePassword(user: User): Omit<User, Property.PASSWORD> {
+  private async hidePassword(
+    user: User,
+  ): Promise<Omit<User, Property.PASSWORD>> {
     const userCopy = { ...user };
 
     delete userCopy[Property.PASSWORD];

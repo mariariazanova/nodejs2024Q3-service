@@ -5,6 +5,7 @@ import { UpdatePasswordDto } from './dtos/update-password';
 import { User } from '../../interfaces/user';
 import { IdValidatePipe } from '../../utils/id-validate.pipe';
 import { CommonController } from '../../shared/request.controller';
+import { Property } from '../../enums/property';
 
 @Controller('user')
 export class UserController extends CommonController<User, UpdatePasswordDto> {
@@ -13,16 +14,18 @@ export class UserController extends CommonController<User, UpdatePasswordDto> {
   }
 
   @Post()
-  create(@Body() data: CreateUserDto): User {
-    return this.userService.create(data);
+  async create(
+    @Body() data: CreateUserDto,
+  ): Promise<Omit<User, Property.PASSWORD>> {
+    return await this.userService.create(data);
   }
 
   @Put(':id')
-  update(
+  async update(
     @Param('id', IdValidatePipe)
     id: string,
     @Body() data: UpdatePasswordDto,
-  ): User {
+  ): Promise<Omit<User, Property.PASSWORD>> {
     return this.userService.update(id, data);
   }
 }

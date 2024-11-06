@@ -22,8 +22,8 @@ export class ArtistService extends RequestService<Artist> {
     super();
   }
 
-  remove(id: string): void {
-    super.remove(id);
+  async remove(id: string): Promise<void> {
+    await super.remove(id);
 
     const artistIndexInFavArtists = dataBase.favs.artists.findIndex(
       (artistId) => artistId === id,
@@ -32,7 +32,7 @@ export class ArtistService extends RequestService<Artist> {
     artistIndexInFavArtists >= 0 &&
       dataBase.favs.artists.splice(artistIndexInFavArtists, 1);
 
-    const artistAlbums = this.albumService.findManyByProperty(
+    const artistAlbums = await this.albumService.findManyByProperty(
       id,
       Property.ARTIST_ID,
     );
@@ -44,7 +44,7 @@ export class ArtistService extends RequestService<Artist> {
       });
     });
 
-    const artistTracks = this.trackService.findManyByProperty(
+    const artistTracks = await this.trackService.findManyByProperty(
       id,
       Property.ARTIST_ID,
     );

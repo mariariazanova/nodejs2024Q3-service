@@ -12,16 +12,16 @@ export class ArtistController extends CommonController<Artist> {
   }
 
   @Post()
-  create(@Body() data: CreateArtistDto): Artist {
-    return this.artistService.create(data);
+  async create(@Body() data: CreateArtistDto): Promise<Artist> {
+    return await this.artistService.create(data);
   }
 
   @Put(':id')
-  update(
+  async update(
     @Param('id', IdValidatePipe)
     id: string,
     @Body() data: CreateArtistDto,
-  ): Artist {
-    return this.artistService.update(id, data);
+  ): Promise<Artist> {
+    return await this.artistService.update(id, data);
   }
 }

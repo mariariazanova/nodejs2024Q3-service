@@ -19,31 +19,31 @@ export abstract class CommonController<
   protected constructor(private readonly service: RequestService<T, K>) {}
 
   @Get()
-  findAll(): T[] {
+  async findAll(): Promise<T[]> {
     return this.service.findAll();
   }
 
   @Get(':id')
-  findOne(@Param('id', IdValidatePipe) id: string): T {
+  async findOne(@Param('id', IdValidatePipe) id: string): Promise<T> {
     return this.service.findOne(id);
   }
 
   @Post()
-  create(@Body() data: T): T | Omit<T, Property> {
+  async create(@Body() data: T): Promise<T | Omit<T, Property>> {
     return this.service.create(data);
   }
 
   @Put(':id')
-  update(
+  async update(
     @Param('id', IdValidatePipe) id: string,
     @Body() data: K,
-  ): T | Omit<T, Property> {
+  ): Promise<T | Omit<T, Property>> {
     return this.service.update(id, data);
   }
 
   @HttpCode(HttpStatus.NO_CONTENT)
   @Delete(':id')
-  remove(@Param('id', IdValidatePipe) id: string): void {
-    this.service.remove(id);
+  async remove(@Param('id', IdValidatePipe) id: string): Promise<void> {
+    await this.service.remove(id);
   }
 }

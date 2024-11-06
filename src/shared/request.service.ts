@@ -11,11 +11,11 @@ export abstract class RequestService<T extends { id: string }, K = Partial<T>> {
 
   protected abstract get items(): T[];
 
-  findAll(): T[] {
+  async findAll(): Promise<T[]> {
     return this.items;
   }
 
-  findOne(id: string, status = StatusCodes.NOT_FOUND): T {
+  async findOne(id: string, status = StatusCodes.NOT_FOUND): Promise<T> {
     const item = this.items.find((item) => item.id === id);
 
     if (!item) {
@@ -29,15 +29,15 @@ export abstract class RequestService<T extends { id: string }, K = Partial<T>> {
     return item;
   }
 
-  findMany(ids: string[]): T[] {
+  async findMany(ids: string[]): Promise<T[]> {
     return this.items.filter((item) => ids.includes(item.id));
   }
 
-  findManyByProperty(id: string, property: Property): T[] {
+  async findManyByProperty(id: string, property: Property): Promise<T[]> {
     return this.items.filter((item) => item[property] === id);
   }
 
-  create(data: Partial<T>): T | Omit<T, Property> {
+  async create(data: Partial<T>): Promise<T | Omit<T, Property>> {
     const newItem = <T>{ ...data, id: v4() };
 
     this.items.push(newItem);
@@ -45,14 +45,14 @@ export abstract class RequestService<T extends { id: string }, K = Partial<T>> {
     return newItem;
   }
 
-  update(id: string, data: K): T | Omit<T, Property> {
-    const item = this.findOne(id);
+  async update(id: string, data: K): Promise<T | Omit<T, Property>> {
+    const item = await this.findOne(id);
     const updatedItem = Object.assign(item, data);
 
     return updatedItem;
   }
 
-  remove(id: string): void {
+  async remove(id: string): Promise<void> {
     const index = this.items.findIndex((item) => item.id === id);
 
     if (index < 0) {

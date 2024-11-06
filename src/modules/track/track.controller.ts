@@ -12,16 +12,16 @@ export class TrackController extends CommonController<Track> {
   }
 
   @Post()
-  create(@Body() data: CreateTrackDto): Track {
+  async create(@Body() data: CreateTrackDto): Promise<Track> {
     return this.trackService.create(data);
   }
 
   @Put(':id')
-  update(
+  async update(
     @Param('id', IdValidatePipe)
     id: string,
     @Body() data: CreateTrackDto,
-  ): Track {
+  ): Promise<Track> {
     return this.trackService.update(id, data);
   }
 }

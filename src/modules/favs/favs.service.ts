@@ -27,18 +27,18 @@ export class FavsService {
     private readonly trackService: TrackService,
   ) {}
 
-  findAll(): FavoritesResponse {
+  async findAll(): Promise<FavoritesResponse> {
     const { artists, albums, tracks } = this.items;
     const response = {
-      artists: this.artistService.findMany(artists),
-      albums: this.albumService.findMany(albums),
-      tracks: this.trackService.findMany(tracks),
+      artists: await this.artistService.findMany(artists),
+      albums: await this.albumService.findMany(albums),
+      tracks: await this.trackService.findMany(tracks),
     };
 
     return response;
   }
 
-  create(source: ItemName, id: string): ItemType {
+  async create(source: ItemName, id: string): Promise<ItemType> {
     const matcher = {
       [Item.TRACK]: () => this.addTrack(id),
       [Item.ALBUM]: () => this.addAlbum(id),
@@ -48,46 +48,48 @@ export class FavsService {
     return matcher[source]();
   }
 
-  remove(source: ItemName, id: string): void {
+  async remove(source: ItemName, id: string): Promise<void> {
     const matcher = {
       [Item.TRACK]: () => this.deleteTrack(id),
       [Item.ALBUM]: () => this.deleteAlbum(id),
       [Item.ARTIST]: () => this.deleteArtist(id),
     };
 
-    matcher[source]();
+    await matcher[source]();
   }
 
-  private addTrack(id: string): Track {
-    return <Track>this.addItem(id, this.items.tracks, this.trackService);
+  private async addTrack(id: string): Promise<Track> {
+    return <Track>await this.addItem(id, this.items.tracks, this.trackService);
   }
 
-  private addAlbum(id: string): Album {
-    return <Album>this.addItem(id, this.items.albums, this.albumService);
+  private async addAlbum(id: string): Promise<Album> {
+    return <Album>await this.addItem(id, this.items.albums, this.albumService);
   }
 
-  private addArtist(id: string): Artist {
-    return <Artist>this.addItem(id, this.items.artists, this.artistService);
+  private async addArtist(id: string): Promise<Artist> {
+    return <Artist>(
+      await this.addItem(id, this.items.artists, this.artistService)
+    );
   }
 
-  private deleteTrack(id: string): void {
-    this.deleteItem(id, this.items.tracks);
+  private async deleteTrack(id: string): Promise<void> {
+    await this.deleteItem(id, this.items.tracks);
   }
 
-  private deleteAlbum(id: string): void {
-    this.deleteItem(id, this.items.albums);
+  private async deleteAlbum(id: string): Promise<void> {
+    await this.deleteItem(id, this.items.albums);
   }
 
-  private deleteArtist(id: string): void {
-    this.deleteItem(id, this.items.artists);
+  private async deleteArtist(id: string): Promise<void> {
+    await this.deleteItem(id, this.items.artists);
   }
 
-  private addItem(
+  private async addItem(
     id: string,
     favItems: string[],
-    service: RequestService<any>,
-  ): ItemType {
-    const item = service.findOne(id, StatusCodes.UNPROCESSABLE_ENTITY);
+    service: RequestService<ItemType>,
+  ): Promise<ItemType> {
+    const item = await service.findOne(id, StatusCodes.UNPROCESSABLE_ENTITY);
 
     if (!favItems.includes(id)) {
       favItems.push(id);
@@ -96,7 +98,7 @@ export class FavsService {
     return item;
   }
 
-  private deleteItem(id: string, favItems: string[]): void {
+  private async deleteItem(id: string, favItems: string[]): Promise<void> {
     const indexInFavs = favItems.findIndex((item) => item === id);
 
     if (indexInFavs === -1) {

@@ -12,8 +12,8 @@ export class TrackService extends RequestService<Track> {
     return dataBase.tracks;
   }
 
-  remove(id: string): void {
-    super.remove(id);
+  async remove(id: string): Promise<void> {
+    await super.remove(id);
 
     const trackIndexInFavTracks = dataBase.favs.tracks.findIndex(
       (trackId) => trackId === id,
