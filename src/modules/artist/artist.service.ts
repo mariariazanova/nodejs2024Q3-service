@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { RequestService } from '../../shared/request.service';
 import { ErrorMessage } from '../../enums/error-message';
 import dataBase from '../../data-base/data-base';

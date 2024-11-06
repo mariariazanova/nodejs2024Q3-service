@@ -1,32 +1,28 @@
-import { forwardRef, Inject, Injectable, UnprocessableEntityException } from "@nestjs/common";
+import {
+  forwardRef,
+  Inject,
+  Injectable,
+  UnprocessableEntityException,
+} from '@nestjs/common';
 import { ErrorMessage } from '../../enums/error-message';
 import dataBase from '../../data-base/data-base';
 import { Favorites, FavoritesResponse } from '../../interfaces/favorites';
 import { ArtistService } from '../artist/artist.service';
 import { AlbumService } from '../album/album.service';
 import { TrackService } from '../track/track.service';
-import { v4 } from 'uuid';
 import { Track } from '../../interfaces/track';
 import { Artist } from '../../interfaces/artist';
 import { Album } from '../../interfaces/album';
 import { RequestService } from '../../shared/request.service';
 import { ItemName, ItemType } from '../../interfaces/item';
 import { Item } from '../../enums/item';
-import { Action } from '../../enums/action';
 import { StatusCodes } from 'http-status-codes';
 
 @Injectable()
 export class FavsService {
-  //fix it
-  // protected notFoundErrorMessage = ErrorMessage.ARTIST_NOT_EXIST;
   notFoundErrorMessage = ErrorMessage.FAVORITE_NOT_EXIST;
 
-  // protected get items(): Favorites[] {
-  //   return dataBase.favs;
-  // }
-
   private get items(): Favorites {
-    // return null;
     return dataBase.favs;
   }
 
@@ -46,10 +42,7 @@ export class FavsService {
   ) {}
 
   findAll(): FavoritesResponse {
-    console.log(this.items);
     const { artists, albums, tracks } = this.items;
-    console.log(artists, albums, tracks);
-
     const response = {
       artists: this.artistService.findMany(artists),
       albums: this.albumService.findMany(albums),
@@ -60,7 +53,6 @@ export class FavsService {
   }
 
   create(source: ItemName, id: string): ItemType {
-    console.log(source, id);
     const matcher = {
       [Item.TRACK]: () => this.addTrack(id),
       [Item.ALBUM]: () => this.addAlbum(id),
@@ -68,8 +60,6 @@ export class FavsService {
     };
 
     return matcher[source]();
-    // return <ItemType>this.getMethod(id)[source][Action.ADD]();
-    // matcher[source];
   }
 
   remove(source: ItemName, id: string): void {
@@ -80,28 +70,6 @@ export class FavsService {
     };
 
     matcher[source]();
-    // return <void>this.getMethod(id)[source][Action.DELETE]();
-  }
-
-  private getMethod(
-    id: string,
-  ): () => Record<Item, Record<Action, () => ItemType | void>> {
-    const matcher = {
-      [Item.TRACK]: {
-        [Action.ADD]: () => this.addTrack(id),
-        [Action.DELETE]: () => this.deleteTrack(id),
-      },
-      [Item.ALBUM]: {
-        [Action.ADD]: () => this.addAlbum(id),
-        [Action.DELETE]: () => this.deleteAlbum(id),
-      },
-      [Item.ARTIST]: {
-        [Action.ADD]: () => this.addArtist(id),
-        [Action.DELETE]: () => this.deleteArtist(id),
-      },
-    };
-
-    return () => matcher;
   }
 
   private addTrack(id: string): Track {

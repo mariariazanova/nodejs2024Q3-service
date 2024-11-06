@@ -1,4 +1,4 @@
-import { IsNotEmpty, IsNumber, IsOptional, IsString } from "class-validator";
+import { IsNotEmpty, IsNumber, IsOptional, IsString } from 'class-validator';
 import { ErrorMessage } from '../../../enums/error-message';
 import { getSpecifiedErrorMessage } from '../../../utils/get-specified-error-message';
 import { Property } from '../../../enums/property';

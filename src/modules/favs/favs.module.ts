@@ -14,6 +14,5 @@ import { TrackModule } from '../track/track.module';
   ],
   controllers: [FavsController],
   providers: [FavsService],
-  // exports: [ArtistModule, AlbumModule, TrackModule],
 })
 export class FavsModule {}

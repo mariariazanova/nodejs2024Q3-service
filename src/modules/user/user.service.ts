@@ -1,9 +1,4 @@
-import {
-  ForbiddenException,
-  Injectable,
-  NotFoundException,
-} from '@nestjs/common';
-import { v4 } from 'uuid';
+import { ForbiddenException, Injectable } from '@nestjs/common';
 import { CreateUserDto } from './dtos/create-user';
 import { UpdatePasswordDto } from './dtos/update-password';
 import dataBase from '../../data-base/data-base';
@@ -111,8 +106,10 @@ export class UserService extends RequestService<User, UpdatePasswordDto> {
   // }
 
   private hidePassword(user: User): Omit<User, Property.PASSWORD> {
-    const { [Property.PASSWORD]: _, ...remaining } = user;
+    const userCopy = { ...user };
 
-    return remaining;
+    delete userCopy[Property.PASSWORD];
+
+    return userCopy;
   }
 }
