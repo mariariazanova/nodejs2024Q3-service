@@ -6,18 +6,10 @@ import { v4 } from 'uuid';
 import { Property } from '../enums/property';
 import { StatusCodes } from 'http-status-codes';
 
-export abstract class RequestService<
-  T extends { id: string },
-  K = Partial<T>,
-  // P = Partial<T>,
-> {
+export abstract class RequestService<T extends { id: string }, K = Partial<T>> {
   protected abstract notFoundErrorMessage: string;
 
   protected abstract get items(): T[];
-
-  protected additionalCreateArguments?: Partial<T>;
-  // protected checkUpdatedData?(data: P, item: T): void;
-  // protected updateAdditionalData?(data: P, item: T): T;
 
   findAll(): T[] {
     return this.items;
@@ -41,25 +33,11 @@ export abstract class RequestService<
     return this.items.filter((item) => ids.includes(item.id));
   }
 
-  // findManyByProperty(id: string, property: keyof T): T[] {
-  //   return this.items.filter((item) => <string>item[property] === id);
-  // }
-
   findManyByProperty(id: string, property: Property): T[] {
     return this.items.filter((item) => item[property] === id);
-
-    // const propertyValue = item[property];
-    //
-    // return propertyValue === id;
-    // });
   }
 
-  // create(data: Omit<T, 'id'>): T {
-  // create(data: K): T {
   create(data: Partial<T>): T | Omit<T, Property> {
-    // const newItem = <T>(
-    //   (<unknown>{ ...data, ...this.additionalCreateArguments, id: v4() })
-    // );
     const newItem = <T>{ ...data, id: v4() };
 
     this.items.push(newItem);
@@ -67,21 +45,8 @@ export abstract class RequestService<
     return newItem;
   }
 
-  // update(id: string, data: P): T {
   update(id: string, data: K): T | Omit<T, Property> {
     const item = this.findOne(id);
-    // let updatedItem: T;
-    //
-    // if (this.checkUpdatedData) {
-    //   this.checkUpdatedData(data, item);
-    // }
-    //
-    // if (this.updateAdditionalData) {
-    //   updatedItem = this.updateAdditionalData(data, item);
-    // } else {
-    //   updatedItem = Object.assign(item, data);
-    // }
-
     const updatedItem = Object.assign(item, data);
 
     return updatedItem;
