@@ -14,6 +14,7 @@ import { ValidationPipe } from '@nestjs/common';
 import { BadRequestException } from '@nestjs/common';
 import { RequestService } from './request.service';
 import { IdValidatePipe } from '../utils/id-validate.pipe';
+import { Property } from '../enums/property';
 
 export abstract class CommonController<
   T extends { id: string },
@@ -35,13 +36,16 @@ export abstract class CommonController<
 
   @Post()
   // @UsePipes(new ValidationPipe({ exceptionFactory: customExceptionFactory }))
-  create(@Body() data: T): T {
+  create(@Body() data: T): T | Omit<T, Property> {
     return this.service.create(data);
   }
 
   @Put(':id')
   // @UsePipes(new ValidationPipe({ transform: true }))
-  update(@Param('id', IdValidatePipe) id: string, @Body() data: K): T {
+  update(
+    @Param('id', IdValidatePipe) id: string,
+    @Body() data: K,
+  ): T | Omit<T, Property> {
     return this.service.update(id, data);
   }
 

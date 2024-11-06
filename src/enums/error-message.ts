@@ -2,6 +2,7 @@ export enum ErrorMessage {
   ALBUM_NOT_EXIST = "Album with this id doesn't exist",
   ARTIST_NOT_EXIST = "Artist with this id doesn't exist",
   EMPTY_REQUIRED_FIELD = 'Some required fields are empty',
+  FAVORITE_NOT_EXIST = 'There is no such favourite entity',
   INVALID_ID = 'Id is invalid',
   INVALID_FIELD_TYPE = 'Some field has invalid type',
   TRACK_NOT_EXIST = "Track with this id doesn't exist",

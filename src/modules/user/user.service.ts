@@ -10,6 +10,7 @@ import dataBase from '../../data-base/data-base';
 import { User } from '../../interfaces/user';
 import { ErrorMessage } from '../../enums/error-message';
 import { RequestService } from '../../shared/request.service';
+import { Property } from '../../enums/property';
 
 @Injectable()
 export class UserService extends RequestService<User, UpdatePasswordDto> {
@@ -55,7 +56,7 @@ export class UserService extends RequestService<User, UpdatePasswordDto> {
   //   return user;
   // }
 
-  create(createUserData: CreateUserDto): User {
+  create(createUserData: CreateUserDto): Omit<User, Property.PASSWORD> {
     const newUser: Partial<User> = {
       // id: v4(),
       ...createUserData,
@@ -63,15 +64,20 @@ export class UserService extends RequestService<User, UpdatePasswordDto> {
       createdAt: Date.now(),
       updatedAt: Date.now(),
     };
+    const createdUser = super.create(newUser);
 
-    return super.create(newUser);
+    return this.hidePassword(createdUser);
+    // super.create(newUser);
 
     // dataBase.users.push(newUser);
     //
     // return newUser;
   }
 
-  update(id: string, updatePasswordData: UpdatePasswordDto): User {
+  update(
+    id: string,
+    updatePasswordData: UpdatePasswordDto,
+  ): Omit<User, Property.PASSWORD> {
     const user: User = this.findOne(id);
 
     if (user.password !== updatePasswordData.oldPassword) {
@@ -89,7 +95,9 @@ export class UserService extends RequestService<User, UpdatePasswordDto> {
     user.version += 1;
     user.updatedAt = Date.now();
 
-    return user;
+    return this.hidePassword(user);
+
+    // return user;
   }
 
   // remove(id: string): void {
@@ -101,4 +109,10 @@ export class UserService extends RequestService<User, UpdatePasswordDto> {
   //
   //   dataBase.users.splice(index, 1);
   // }
+
+  private hidePassword(user: User): Omit<User, Property.PASSWORD> {
+    const { [Property.PASSWORD]: _, ...remaining } = user;
+
+    return remaining;
+  }
 }

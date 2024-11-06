@@ -1,4 +1,4 @@
-import { forwardRef, Inject, Injectable } from '@nestjs/common';
+import { forwardRef, Inject, Injectable, UnprocessableEntityException } from "@nestjs/common";
 import { ErrorMessage } from '../../enums/error-message';
 import dataBase from '../../data-base/data-base';
 import { Favorites, FavoritesResponse } from '../../interfaces/favorites';
@@ -13,12 +13,13 @@ import { RequestService } from '../../shared/request.service';
 import { ItemName, ItemType } from '../../interfaces/item';
 import { Item } from '../../enums/item';
 import { Action } from '../../enums/action';
+import { StatusCodes } from 'http-status-codes';
 
 @Injectable()
 export class FavsService {
   //fix it
   // protected notFoundErrorMessage = ErrorMessage.ARTIST_NOT_EXIST;
-  // notFoundErrorMessage = ErrorMessage.ARTIST_NOT_EXIST;
+  notFoundErrorMessage = ErrorMessage.FAVORITE_NOT_EXIST;
 
   // protected get items(): Favorites[] {
   //   return dataBase.favs;
@@ -112,7 +113,6 @@ export class FavsService {
   }
 
   private addArtist(id: string): Artist {
-    console.log('add artist')
     return <Artist>this.addItem(id, this.items.artists, this.artistService);
   }
 
@@ -133,8 +133,7 @@ export class FavsService {
     favItems: string[],
     service: RequestService<any>,
   ): ItemType {
-    const item = service.findOne(id);
-    console.log(item);
+    const item = service.findOne(id, StatusCodes.UNPROCESSABLE_ENTITY);
 
     if (!favItems.includes(id)) {
       favItems.push(id);
@@ -147,7 +146,7 @@ export class FavsService {
     const indexInFavs = favItems.findIndex((item) => item === id);
 
     if (indexInFavs === -1) {
-      //error?
+      throw new UnprocessableEntityException(this.notFoundErrorMessage);
     }
 
     favItems.splice(indexInFavs, 1);

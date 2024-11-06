@@ -1,9 +1,10 @@
 import {
-  ForbiddenException,
-  Injectable,
   NotFoundException,
+  UnprocessableEntityException,
 } from '@nestjs/common';
 import { v4 } from 'uuid';
+import { Property } from '../enums/property';
+import { StatusCodes } from 'http-status-codes';
 
 export abstract class RequestService<
   T extends { id: string },
@@ -22,11 +23,15 @@ export abstract class RequestService<
     return this.items;
   }
 
-  findOne(id: string): T {
+  findOne(id: string, status = StatusCodes.NOT_FOUND): T {
     const item = this.items.find((item) => item.id === id);
 
     if (!item) {
-      throw new NotFoundException(this.notFoundErrorMessage);
+      if (status === StatusCodes.NOT_FOUND) {
+        throw new NotFoundException(this.notFoundErrorMessage);
+      } else {
+        throw new UnprocessableEntityException(this.notFoundErrorMessage);
+      }
     }
 
     return item;
@@ -36,9 +41,22 @@ export abstract class RequestService<
     return this.items.filter((item) => ids.includes(item.id));
   }
 
+  // findManyByProperty(id: string, property: keyof T): T[] {
+  //   return this.items.filter((item) => <string>item[property] === id);
+  // }
+
+  findManyByProperty(id: string, property: Property): T[] {
+    return this.items.filter((item) => item[property] === id);
+
+    // const propertyValue = item[property];
+    //
+    // return propertyValue === id;
+    // });
+  }
+
   // create(data: Omit<T, 'id'>): T {
   // create(data: K): T {
-  create(data: Partial<T>): T {
+  create(data: Partial<T>): T | Omit<T, Property> {
     // const newItem = <T>(
     //   (<unknown>{ ...data, ...this.additionalCreateArguments, id: v4() })
     // );
@@ -50,7 +68,7 @@ export abstract class RequestService<
   }
 
   // update(id: string, data: P): T {
-  update(id: string, data: K): T {
+  update(id: string, data: K): T | Omit<T, Property> {
     const item = this.findOne(id);
     // let updatedItem: T;
     //

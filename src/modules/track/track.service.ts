@@ -11,4 +11,15 @@ export class TrackService extends RequestService<Track> {
   protected get items(): Track[] {
     return dataBase.tracks;
   }
+
+  remove(id: string): void {
+    super.remove(id);
+
+    const trackIndexInFavTracks = dataBase.favs.tracks.findIndex(
+      (trackId) => trackId === id,
+    );
+
+    trackIndexInFavTracks >= 0 &&
+      dataBase.favs.tracks.splice(trackIndexInFavTracks, 1);
+  }
 }
