@@ -21,7 +21,6 @@ export class FavsController {
 
   @Get()
   findAll(): FavoritesResponse {
-    console.log('findAll');
     return this.favsService.findAll();
   }
 

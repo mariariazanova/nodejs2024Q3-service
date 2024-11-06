@@ -20,7 +20,6 @@ export abstract class CommonController<
 
   @Get()
   findAll(): T[] {
-    console.log('get all users');
     return this.service.findAll();
   }
 

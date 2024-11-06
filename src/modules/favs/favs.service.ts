@@ -1,9 +1,4 @@
-import {
-  forwardRef,
-  Inject,
-  Injectable,
-  UnprocessableEntityException,
-} from '@nestjs/common';
+import { Injectable, UnprocessableEntityException } from '@nestjs/common';
 import { ErrorMessage } from '../../enums/error-message';
 import dataBase from '../../data-base/data-base';
 import { Favorites, FavoritesResponse } from '../../interfaces/favorites';
@@ -27,17 +22,8 @@ export class FavsService {
   }
 
   constructor(
-    // private readonly artistService: ArtistService,
-    // private readonly albumService: AlbumService,
-    // private readonly trackService: TrackService,
-
-    @Inject(forwardRef(() => ArtistService))
     private readonly artistService: ArtistService,
-
-    @Inject(forwardRef(() => AlbumService))
     private readonly albumService: AlbumService,
-
-    @Inject(forwardRef(() => TrackService))
     private readonly trackService: TrackService,
   ) {}
 
