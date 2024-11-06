@@ -5,7 +5,11 @@ const dataBase: DataBase = {
   artists: [],
   tracks: [],
   albums: [],
-  favs: [],
+  favs: {
+    artists: [],
+    albums: [],
+    tracks: [],
+  },
 };
 
 export default dataBase;

@@ -9,5 +9,5 @@ export interface DataBase {
   artists: Artist[];
   tracks: Track[];
   albums: Album[];
-  favs: Favorites[];
+  favs: Favorites;
 }

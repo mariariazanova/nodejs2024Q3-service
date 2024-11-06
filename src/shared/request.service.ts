@@ -4,11 +4,7 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { v4 } from 'uuid';
-import dataBase from '../data-base/data-base';
-import { ErrorMessage } from '../enums/error-message';
-import { DataBase } from '../interfaces/data-base';
 
-// @Injectable()
 export abstract class RequestService<
   T extends { id: string },
   K = Partial<T>,
@@ -34,6 +30,10 @@ export abstract class RequestService<
     }
 
     return item;
+  }
+
+  findMany(ids: string[]): T[] {
+    return this.items.filter((item) => ids.includes(item.id));
   }
 
   // create(data: Omit<T, 'id'>): T {
