@@ -105,6 +105,8 @@ describe('Users (e2e)', () => {
       expect(response.body).not.toHaveProperty('password');
       expect(validate(id)).toBe(true);
       expect(version).toBe(1);
+      console.log(createdAt, updatedAt);
+      console.log(typeof createdAt, typeof updatedAt);
       expect(typeof createdAt).toBe('number');
       expect(typeof updatedAt).toBe('number');
       expect(createdAt === updatedAt).toBe(true);

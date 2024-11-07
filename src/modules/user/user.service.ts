@@ -28,12 +28,14 @@ export class UserService extends RequestService<UserEntity, UpdatePasswordDto> {
   async create(
     createUserData: CreateUserDto,
   ): Promise<Omit<UserEntity, Property.PASSWORD>> {
+    console.log(Date.now(), Date.now() / 1000);
     const newUser: Partial<UserEntity> = {
       ...createUserData,
       version: 1,
-      createdAt: Date.now(),
-      updatedAt: Date.now(),
+      // createdAt: Math.floor(Date.now() / 1000), //Date.now(),
+      // updatedAt: Math.floor(Date.now() / 1000), //Date.now(),
     };
+    console.log(newUser);
     const createdUser = await super.create(newUser);
 
     return this.hidePassword(createdUser);
@@ -51,7 +53,7 @@ export class UserService extends RequestService<UserEntity, UpdatePasswordDto> {
 
     user.password = updatePasswordData.newPassword;
     user.version += 1;
-    user.updatedAt = Date.now();
+    // user.updatedAt = Math.floor(Date.now() / 1000); //Date.now();
 
     return await this.hidePassword(user);
   }

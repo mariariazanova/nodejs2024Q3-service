@@ -24,8 +24,12 @@ export class UserEntity {
   @CreateDateColumn({
     type: 'timestamp',
     default: () => 'CURRENT_TIMESTAMP()',
+    // transformer: {
+    //   from: (value) => value,
+    //   to: (value) => value * 1000,
+    // },
     transformer: {
-      from: (value) => value * 1000,
+      from: (value) => +value,
       to: (value) => value,
     },
   })
@@ -35,8 +39,12 @@ export class UserEntity {
     type: 'timestamp',
     default: () => 'CURRENT_TIMESTAMP(6)',
     onUpdate: 'CURRENT_TIMESTAMP(6)',
+    // transformer: {
+    //   from: (value) => value * 1000,
+    //   to: (value) => value,
+    // },
     transformer: {
-      from: (value) => value * 1000,
+      from: (value) => +value,
       to: (value) => value,
     },
   })

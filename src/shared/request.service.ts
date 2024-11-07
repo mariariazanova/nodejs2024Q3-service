@@ -20,7 +20,8 @@ export abstract class RequestService<T extends { id: string }, K = Partial<T>> {
   }
 
   async findOne(id: string, status = StatusCodes.NOT_FOUND): Promise<T> {
-    const item = await this.repository.findOne(<any>{ id });
+    // const item = await this.repository.findOne(<any>{ id });
+    const item = await this.repository.findOne(<any>{ where: { id } });
 
     if (!item) {
       if (status === StatusCodes.NOT_FOUND) {
