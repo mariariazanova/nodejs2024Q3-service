@@ -5,17 +5,24 @@ import dataBase from '../../data-base/data-base';
 import { Album } from '../../interfaces/album';
 import { Property } from '../../enums/property';
 import { TrackService } from '../track/track.service';
+import { AlbumEntity } from './entities/album.entity';
+import { InjectRepository } from '@nestjs/typeorm';
+import { ArtistEntity } from '../artist/entities/artist.entity';
+import { Repository } from 'typeorm';
 
 @Injectable()
-export class AlbumService extends RequestService<Album> {
+export class AlbumService extends RequestService<AlbumEntity> {
   protected notFoundErrorMessage = ErrorMessage.ALBUM_NOT_EXIST;
 
-  protected get items(): Album[] {
-    return dataBase.albums;
-  }
+  // protected get items(): Album[] {
+  //   return dataBase.albums;
+  // }
 
-  constructor(private readonly trackService: TrackService) {
-    super();
+  constructor(
+    @InjectRepository(AlbumEntity)
+    protected readonly repository: Repository<AlbumEntity>,
+    private readonly trackService: TrackService) {
+    super(repository);
   }
 
   async remove(id: string): Promise<void> {

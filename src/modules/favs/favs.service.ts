@@ -12,6 +12,10 @@ import { RequestService } from '../../shared/request.service';
 import { ItemName, ItemType } from '../../interfaces/item';
 import { Item } from '../../enums/item';
 import { StatusCodes } from 'http-status-codes';
+import { InjectRepository } from '@nestjs/typeorm';
+import { ArtistEntity } from '../artist/entities/artist.entity';
+import { Repository } from 'typeorm';
+import { FavoriteEntity } from './entities/favs.entity';
 
 @Injectable()
 export class FavsService {
@@ -22,6 +26,8 @@ export class FavsService {
   }
 
   constructor(
+    @InjectRepository(FavoriteEntity)
+    private readonly repository: Repository<FavoriteEntity>,
     private readonly artistService: ArtistService,
     private readonly albumService: AlbumService,
     private readonly trackService: TrackService,

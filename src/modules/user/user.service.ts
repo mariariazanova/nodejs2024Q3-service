@@ -1,4 +1,6 @@
 import { ForbiddenException, Injectable } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
 import { CreateUserDto } from './dtos/create-user';
 import { UpdatePasswordDto } from './dtos/update-password';
 import dataBase from '../../data-base/data-base';
@@ -6,19 +8,27 @@ import { User } from '../../interfaces/user';
 import { ErrorMessage } from '../../enums/error-message';
 import { RequestService } from '../../shared/request.service';
 import { Property } from '../../enums/property';
+import { UserEntity } from './entities/user.entity';
 
 @Injectable()
-export class UserService extends RequestService<User, UpdatePasswordDto> {
+export class UserService extends RequestService<UserEntity, UpdatePasswordDto> {
   protected notFoundErrorMessage = ErrorMessage.USER_NOT_EXIST;
 
-  protected get items(): User[] {
-    return dataBase.users;
+  // protected get items(): UserEntity[] {
+  //   return dataBase.users;
+  // }
+
+  constructor(
+    @InjectRepository(UserEntity)
+    protected readonly repository: Repository<UserEntity>,
+  ) {
+    super(repository);
   }
 
   async create(
     createUserData: CreateUserDto,
-  ): Promise<Omit<User, Property.PASSWORD>> {
-    const newUser: Partial<User> = {
+  ): Promise<Omit<UserEntity, Property.PASSWORD>> {
+    const newUser: Partial<UserEntity> = {
       ...createUserData,
       version: 1,
       createdAt: Date.now(),
@@ -32,8 +42,8 @@ export class UserService extends RequestService<User, UpdatePasswordDto> {
   async update(
     id: string,
     updatePasswordData: UpdatePasswordDto,
-  ): Promise<Omit<User, Property.PASSWORD>> {
-    const user: User = await this.findOne(id);
+  ): Promise<Omit<UserEntity, Property.PASSWORD>> {
+    const user: UserEntity = await this.findOne(id);
 
     if (user.password !== updatePasswordData.oldPassword) {
       throw new ForbiddenException(ErrorMessage.WRONG_OLD_PASSWORD);
@@ -47,8 +57,8 @@ export class UserService extends RequestService<User, UpdatePasswordDto> {
   }
 
   private async hidePassword(
-    user: User,
-  ): Promise<Omit<User, Property.PASSWORD>> {
+    user: UserEntity,
+  ): Promise<Omit<UserEntity, Property.PASSWORD>> {
     const userCopy = { ...user };
 
     delete userCopy[Property.PASSWORD];

@@ -6,20 +6,26 @@ import { Artist } from '../../interfaces/artist';
 import { AlbumService } from '../album/album.service';
 import { TrackService } from '../track/track.service';
 import { Property } from '../../enums/property';
+import { ArtistEntity } from './entities/artist.entity';
+import { InjectRepository } from '@nestjs/typeorm';
+import { TrackEntity } from '../track/entities/track.entity';
+import { Repository } from 'typeorm';
 
 @Injectable()
-export class ArtistService extends RequestService<Artist> {
+export class ArtistService extends RequestService<ArtistEntity> {
   protected notFoundErrorMessage = ErrorMessage.ARTIST_NOT_EXIST;
 
-  protected get items(): Artist[] {
-    return dataBase.artists;
-  }
+  // protected get items(): Artist[] {
+  //   return dataBase.artists;
+  // }
 
   constructor(
+    @InjectRepository(ArtistEntity)
+    protected readonly repository: Repository<ArtistEntity>,
     private readonly albumService: AlbumService,
     private readonly trackService: TrackService,
   ) {
-    super();
+    super(repository);
   }
 
   async remove(id: string): Promise<void> {
