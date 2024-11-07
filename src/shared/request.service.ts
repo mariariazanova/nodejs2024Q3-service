@@ -20,7 +20,6 @@ export abstract class RequestService<T extends { id: string }, K = Partial<T>> {
   }
 
   async findOne(id: string, status = StatusCodes.NOT_FOUND): Promise<T> {
-    // const item = await this.repository.findOne(<any>{ id });
     const item = await this.repository.findOne(<any>{ where: { id } });
 
     if (!item) {
@@ -35,12 +34,11 @@ export abstract class RequestService<T extends { id: string }, K = Partial<T>> {
   }
 
   async findMany(ids: string[]): Promise<T[]> {
-    return this.repository.findByIds(<any>{ ids });
+    return await this.repository.findByIds(ids);
   }
 
   async findManyByProperty(id: string, property: Property): Promise<T[]> {
-    // return this.items.filter((item) => item[property] === id);
-    return this.repository.find(<any>{ [property]: id });
+    return await this.repository.find(<any>{ [property]: id });
   }
 
   async create(data: Partial<T>): Promise<T | Omit<T, Property>> {

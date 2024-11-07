@@ -43,12 +43,6 @@ export class FavsService {
     const trackIds = favorites
       .filter((fav) => fav.source === Item.TRACK)
       .map((fav) => fav.sourceId);
-    // const { artists, albums, tracks } = favorites;
-    // const response = {
-    //   artists: await this.artistService.findMany(artists),
-    //   albums: await this.albumService.findMany(albums),
-    //   tracks: await this.trackService.findMany(tracks),
-    // };
     const response = {
       artists: await this.artistService.findMany(artistIds),
       albums: await this.albumService.findMany(albumIds),
@@ -87,7 +81,9 @@ export class FavsService {
   }
 
   private async addArtist(id: string): Promise<ArtistEntity> {
-    return <ArtistEntity>await this.addItem(id, Item.ARTIST, this.artistService);
+    return <ArtistEntity>(
+      await this.addItem(id, Item.ARTIST, this.artistService)
+    );
   }
 
   private async deleteTrack(id: string): Promise<void> {
@@ -120,15 +116,10 @@ export class FavsService {
 
     await this.repository.save({ source, sourceId: id });
 
-    // if (!favItems.includes(id)) {
-    //   favItems.push(id);
-    // }
-
     return item;
   }
 
   private async deleteItem(id: string, source: ItemName): Promise<void> {
-    // const indexInFavs = favItems.findIndex((item) => item === id);
     const favorite = await this.repository.findOne({
       where: { source, sourceId: id },
     });
@@ -137,13 +128,6 @@ export class FavsService {
       throw new UnprocessableEntityException(this.notFoundErrorMessage);
     }
 
-    // Remove the item from the favorites table
     await this.repository.remove(favorite);
-
-    // if (indexInFavs === -1) {
-    //   throw new UnprocessableEntityException(this.notFoundErrorMessage);
-    // }
-    //
-    // favItems.splice(indexInFavs, 1);
   }
 }
