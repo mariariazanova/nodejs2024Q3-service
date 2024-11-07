@@ -23,14 +23,14 @@ export class TrackService extends RequestService<TrackEntity> {
     super(repository);
   }
 
-  async remove(id: string): Promise<void> {
-    await super.remove(id);
-
-    const trackIndexInFavTracks = dataBase.favs.tracks.findIndex(
-      (trackId) => trackId === id,
-    );
-
-    trackIndexInFavTracks >= 0 &&
-      dataBase.favs.tracks.splice(trackIndexInFavTracks, 1);
-  }
+  // async remove(id: string): Promise<void> {
+  //   await super.remove(id);
+  //
+  //   const trackIndexInFavTracks = dataBase.favs.tracks.findIndex(
+  //     (trackId) => trackId === id,
+  //   );
+  //
+  //   trackIndexInFavTracks >= 0 &&
+  //     dataBase.favs.tracks.splice(trackIndexInFavTracks, 1);
+  // }
 }

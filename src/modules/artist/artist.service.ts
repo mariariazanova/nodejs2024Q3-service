@@ -28,38 +28,38 @@ export class ArtistService extends RequestService<ArtistEntity> {
     super(repository);
   }
 
-  async remove(id: string): Promise<void> {
-    await super.remove(id);
+  // async remove(id: string): Promise<void> {
+  //   await super.remove(id);
 
-    const artistIndexInFavArtists = dataBase.favs.artists.findIndex(
-      (artistId) => artistId === id,
-    );
-
-    artistIndexInFavArtists >= 0 &&
-      dataBase.favs.artists.splice(artistIndexInFavArtists, 1);
-
-    const artistAlbums = await this.albumService.findManyByProperty(
-      id,
-      Property.ARTIST_ID,
-    );
-
-    artistAlbums.forEach((album) => {
-      this.albumService.update(album.id, {
-        ...album,
-        artistId: null,
-      });
-    });
-
-    const artistTracks = await this.trackService.findManyByProperty(
-      id,
-      Property.ARTIST_ID,
-    );
-
-    artistTracks.forEach((track) => {
-      this.trackService.update(track.id, {
-        ...track,
-        artistId: null,
-      });
-    });
-  }
+  // const artistIndexInFavArtists = dataBase.favs.artists.findIndex(
+  //   (artistId) => artistId === id,
+  // );
+  //
+  // artistIndexInFavArtists >= 0 &&
+  //   dataBase.favs.artists.splice(artistIndexInFavArtists, 1);
+  //
+  // const artistAlbums = await this.albumService.findManyByProperty(
+  //   id,
+  //   Property.ARTIST_ID,
+  // );
+  //
+  // artistAlbums.forEach((album) => {
+  //   this.albumService.update(album.id, {
+  //     ...album,
+  //     artistId: null,
+  //   });
+  // });
+  //
+  // const artistTracks = await this.trackService.findManyByProperty(
+  //   id,
+  //   Property.ARTIST_ID,
+  // );
+  //
+  // artistTracks.forEach((track) => {
+  //   this.trackService.update(track.id, {
+  //     ...track,
+  //     artistId: null,
+  //   });
+  // });
+  // }
 }

@@ -25,26 +25,26 @@ export class AlbumService extends RequestService<AlbumEntity> {
     super(repository);
   }
 
-  async remove(id: string): Promise<void> {
-    await super.remove(id);
-
-    const albumIndexInFavAlbums = dataBase.favs.albums.findIndex(
-      (albumId) => albumId === id,
-    );
-
-    albumIndexInFavAlbums >= 0 &&
-      dataBase.favs.albums.splice(albumIndexInFavAlbums, 1);
-
-    const albumTracks = await this.trackService.findManyByProperty(
-      id,
-      Property.ALBUM_ID,
-    );
-
-    albumTracks.forEach((track) => {
-      this.trackService.update(track.id, {
-        ...track,
-        albumId: null,
-      });
-    });
-  }
+  // async remove(id: string): Promise<void> {
+  //   await super.remove(id);
+  //
+  //   const albumIndexInFavAlbums = dataBase.favs.albums.findIndex(
+  //     (albumId) => albumId === id,
+  //   );
+  //
+  //   albumIndexInFavAlbums >= 0 &&
+  //     dataBase.favs.albums.splice(albumIndexInFavAlbums, 1);
+  //
+  //   const albumTracks = await this.trackService.findManyByProperty(
+  //     id,
+  //     Property.ALBUM_ID,
+  //   );
+  //
+  //   albumTracks.forEach((track) => {
+  //     this.trackService.update(track.id, {
+  //       ...track,
+  //       albumId: null,
+  //     });
+  //   });
+  // }
 }
