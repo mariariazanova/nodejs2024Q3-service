@@ -1,4 +1,7 @@
 import { Injectable, UnprocessableEntityException } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import { StatusCodes } from 'http-status-codes';
 import { ErrorMessage } from '../../enums/error-message';
 import { FavoritesResponse } from '../../interfaces/favorites';
 import { ArtistService } from '../artist/artist.service';
@@ -7,10 +10,7 @@ import { TrackService } from '../track/track.service';
 import { RequestService } from '../../shared/request.service';
 import { ItemName, ItemType } from '../../interfaces/item';
 import { Item } from '../../enums/item';
-import { StatusCodes } from 'http-status-codes';
-import { InjectRepository } from '@nestjs/typeorm';
 import { ArtistEntity } from '../artist/entities/artist.entity';
-import { Repository } from 'typeorm';
 import { FavoriteEntity } from './entities/favs.entity';
 import { TrackEntity } from '../track/entities/track.entity';
 import { AlbumEntity } from '../album/entities/album.entity';
@@ -18,10 +18,6 @@ import { AlbumEntity } from '../album/entities/album.entity';
 @Injectable()
 export class FavsService {
   notFoundErrorMessage = ErrorMessage.FAVORITE_NOT_EXIST;
-
-  // private get items(): Favorites {
-  //   return dataBase.favs;
-  // }
 
   constructor(
     @InjectRepository(FavoriteEntity)
@@ -32,17 +28,9 @@ export class FavsService {
   ) {}
 
   async findAll(): Promise<FavoritesResponse> {
-    const favorites = await this.repository.find();
-
-    const artistIds = favorites
-      .filter((fav) => fav.source === Item.ARTIST)
-      .map((fav) => fav.sourceId);
-    const albumIds = favorites
-      .filter((fav) => fav.source === Item.ALBUM)
-      .map((fav) => fav.sourceId);
-    const trackIds = favorites
-      .filter((fav) => fav.source === Item.TRACK)
-      .map((fav) => fav.sourceId);
+    const artistIds = await this.filterFavorites(Item.ARTIST);
+    const albumIds = await this.filterFavorites(Item.ALBUM);
+    const trackIds = await this.filterFavorites(Item.TRACK);
     const response = {
       artists: await this.artistService.findMany(artistIds),
       albums: await this.albumService.findMany(albumIds),
@@ -129,5 +117,13 @@ export class FavsService {
     }
 
     await this.repository.remove(favorite);
+  }
+
+  private async filterFavorites(source: Item): Promise<string[]> {
+    const favorites = await this.repository.find();
+
+    return favorites
+      .filter((fav) => fav.source === source)
+      .map((fav) => fav.sourceId);
   }
 }

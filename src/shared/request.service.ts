@@ -2,7 +2,6 @@ import {
   NotFoundException,
   UnprocessableEntityException,
 } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { v4 } from 'uuid';
 import { StatusCodes } from 'http-status-codes';
@@ -11,9 +10,7 @@ import { Property } from '../enums/property';
 export abstract class RequestService<T extends { id: string }, K = Partial<T>> {
   protected abstract notFoundErrorMessage: string;
 
-  // protected abstract get items(): T[];
-
-  constructor(protected readonly repository: Repository<T>) {}
+  protected constructor(protected readonly repository: Repository<T>) {}
 
   async findAll(): Promise<T[]> {
     return this.repository.find();
@@ -37,16 +34,7 @@ export abstract class RequestService<T extends { id: string }, K = Partial<T>> {
     return await this.repository.findByIds(ids);
   }
 
-  async findManyByProperty(id: string, property: Property): Promise<T[]> {
-    return await this.repository.find(<any>{ [property]: id });
-  }
-
   async create(data: Partial<T>): Promise<T | Omit<T, Property>> {
-    // const newItem = <T>{ ...data, id: v4() };
-    //
-    // this.items.push(newItem);
-    //
-    // return newItem;
     const newItemData = <T>{ ...data, id: v4() };
     const newItem = this.repository.create(newItemData);
 
@@ -54,10 +42,6 @@ export abstract class RequestService<T extends { id: string }, K = Partial<T>> {
   }
 
   async update(id: string, data: K): Promise<T | Omit<T, Property>> {
-    // const item = await this.findOne(id);
-    // const updatedItem = Object.assign(item, data);
-    //
-    // return updatedItem;
     const item = await this.findOne(id);
     const updatedItem = this.repository.merge(item, <any>data);
 
@@ -65,13 +49,6 @@ export abstract class RequestService<T extends { id: string }, K = Partial<T>> {
   }
 
   async remove(id: string): Promise<void> {
-    // const index = this.items.findIndex((item) => item.id === id);
-    //
-    // if (index < 0) {
-    //   throw new NotFoundException(this.notFoundErrorMessage);
-    // }
-    //
-    // this.items.splice(index, 1);
     const item = await this.findOne(id);
 
     if (!item) {
