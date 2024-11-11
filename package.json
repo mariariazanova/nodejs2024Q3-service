@@ -10,6 +10,8 @@
     "build": "nest build",
     "create-db": "node init-db.js",
     "docker": "docker-compose up --build",
+    "docker-scan:app": "docker scout cves --details local://nodejs2024q3-service-app",
+    "docker-scan:db": "docker scout cves --details local://nodejs2024q3-service-postgres",
     "docker-test": "docker exec app npm run test",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
     "start": "npm run create-db && nest start",
