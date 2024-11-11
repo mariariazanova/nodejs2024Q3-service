@@ -19,12 +19,14 @@ npm install
 
 ## Running application
 
-Create a copy of file .env.example /.env
+1. Create a copy of file .env.example /.env
+2. You can change database name in /.env. New database will be created automatically.
+3. If you want to see a newly created database in database IDE (for example, DBeaver), probably you need to refresh the list of databases.
 
 ```
 npm run start
 ```
-
+Wait until you see 'Server started' message in console. Only then server is ready to work, to be tested and to show docs.
 After starting the app on port (4000 as default) you can open
 in your browser OpenAPI documentation by typing http://localhost:4000/doc/.
 

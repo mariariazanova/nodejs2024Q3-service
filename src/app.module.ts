@@ -21,8 +21,8 @@ import { TypeOrmModule } from '@nestjs/typeorm';
       username: process.env.DATABASE_USER,
       password: process.env.DATABASE_PASSWORD,
       database: process.env.DATABASE_NAME,
-      autoLoadEntities: true, // Automatically load entities, no need to specify them
-      synchronize: true, // Set to false in production; automatically syncs database schema
+      autoLoadEntities: true,
+      synchronize: true,
     }),
     UserModule,
     TrackModule,
