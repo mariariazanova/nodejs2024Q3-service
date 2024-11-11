@@ -7,12 +7,11 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
   app.useGlobalPipes(new ValidationPipe({ whitelist: true }));
-  await getSwaggerConfig(app);
 
-  await app.listen(4000);
-  console.log(
-    `Server started: ${await app.getUrl()} \nApi documentation:  ${await app.getUrl()}/doc`,
-  );
+  await getSwaggerConfig(app);
+  await app.listen(process.env.PORT || 4000, process.env.HOST || 'localhost');
+
+  console.log('Server started');
 }
 
 bootstrap();
