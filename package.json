@@ -9,6 +9,8 @@
     "prebuild": "rimraf dist",
     "build": "nest build",
     "create-db": "node init-db.js",
+    "docker": "docker-compose up --build",
+    "docker-test": "docker exec app npm run test",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
     "start": "npm run create-db && nest start",
     "start:dev": "nest start --watch",

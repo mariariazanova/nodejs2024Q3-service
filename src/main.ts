@@ -9,7 +9,8 @@ async function bootstrap() {
   app.useGlobalPipes(new ValidationPipe({ whitelist: true }));
 
   await getSwaggerConfig(app);
-  await app.listen(process.env.PORT || 4000, process.env.HOST || 'localhost');
+  // await app.listen(process.env.PORT || 4000, process.env.HOST || 'localhost');
+  await app.listen(process.env.PORT || 4000, '::');
 
   console.log('Server started');
 }

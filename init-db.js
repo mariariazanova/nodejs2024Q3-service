@@ -4,12 +4,15 @@ const { Client } = require('pg');
 
 async function createDatabase() {
   const client = new Client({
-    host: process.env.DATABASE_HOST || 'localhost',
+    host: process.env.DATABASE_HOST || 'postgres',
+      // 'localhost',
     port: process.env.DATABASE_PORT,
     user: process.env.DATABASE_USER,
     password: process.env.DATABASE_PASSWORD,
     database: 'postgres', //initial database that already exists
   });
+
+  console.log(process.env.DATABASE_NAME);
 
   try {
     await client.connect();

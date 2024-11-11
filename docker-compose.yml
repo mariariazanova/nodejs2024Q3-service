@@ -1,0 +1,63 @@
+version: '3.8'
+
+services:
+  # PostgreSQL database container
+  postgres:
+    build:
+      context: .
+      dockerfile: Dockerfile.postgres
+    image: nodejs2024q3-service-postgres
+    container_name: postgres
+    restart: always
+#    env_file:
+#      - .env
+    ports:
+      - '${DATABASE_PORT}:${DATABASE_PORT}'
+    environment:
+      - POSTGRES_PASSWORD=${DATABASE_PASSWORD}
+      - POSTGRES_USER=${DATABASE_USER}
+      - POSTGRES_DB=${DATABASE_NAME}
+#    environment:
+#      POSTGRES_USER: myuser
+#      POSTGRES_PASSWORD: mypassword
+#      POSTGRES_DB: mydb
+    networks:
+      - node-postgres-bridge
+    volumes:
+      - db:/var/lib/postgresql/data
+#      - postgres-data:/var/lib/postgresql/data
+#    ports:
+#      - "5432:5432"
+
+  # Application container
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile.app
+    image: nodejs2024q3-service-app
+    container_name: app
+    env_file:
+      - .env
+    ports:
+      - '${PORT}:${PORT}'
+    depends_on:
+      - postgres
+    volumes:
+      - ./src:/usr/app/src
+    networks:
+      - node-postgres-bridge
+#    ports:
+#      - "5000:5000"
+#    environment:
+#      DATABASE_URL: postgres://myuser:mypassword@postgres:5432/mydb
+#    volumes:
+#      - ./app:/app
+networks:
+  node-postgres-bridge:
+    name: node-postgres-bridge
+    driver: bridge
+
+volumes:
+  db:
+#  postgres-data:
+#    driver: local
