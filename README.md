@@ -21,7 +21,7 @@ npm install
 
 1. Create a copy of file .env.example /.env
 2. You can change database name in /.env. New database will be created automatically.
-3. If you want to see a newly created database in database IDE (for example, DBeaver), probably you need to refresh the list of databases.
+3. Before starting, you need to run Docker (for example, open Docker Desktop)
 
 ```
 npm run start
